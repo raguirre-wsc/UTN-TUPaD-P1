@@ -1,14 +1,18 @@
 import psycopg2
 import time
 
+#Espera hasta que el servicio de Postgres este operativo
 time.sleep(5)
 
+#Creamos conexion a la BD
 conn = psycopg2.connect(
     host="db",
     dbname="recetas",
     user="user",
     password="password"
 )
+
+#Creamos un cursor para realizar consultas
 cur = conn.cursor()
 
 # Crear tabla si no existe
@@ -21,15 +25,17 @@ CREATE TABLE IF NOT EXISTS recetas (
 """)
 conn.commit()
 
-print("RESETAS CARGADAS EN BD")
+print("RECETAS CARGADAS EN BD")
 
+#Seleccionamos todo el contenido de la tabla y los mostramos linea por linea
 cur.execute("SELECT * FROM recetas")
 recetas = cur.fetchall()
 for receta in recetas:
     print(receta)
 
-stop=""
 
+#Hacemos un ciclo while para pedir nuevos datos hasta que el usuario termine el proceso
+stop=""
 while stop!="F":
     nombre = input("Ingrese el nombre de la receta: ")
     horario = input("Ingrese el horario de la receta: ")
@@ -42,6 +48,7 @@ while stop!="F":
 
     stop=input("Ingrese F para finaliar o Enter para continuar: ")
 
+#Termianmos el cursor y la conexion
 cur.close()
 conn.close()
 
